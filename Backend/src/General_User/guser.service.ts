@@ -16,6 +16,10 @@ export class UserService {
         private buserRepository: Repository<UserEntity>,
     ) {}
 
+    async findOne(id: number): Promise<UserEntity | undefined> {
+      return this.buserRepository.findOne({ where: { id } });
+    }
+
     async createUser(createUserDto: CreateUserDto): Promise<UserEntity> {
         const hashedPassword = await bcrypt.hash(createUserDto.password, 10); // 10 is the salt round
         const user = this.buserRepository.create({
@@ -31,7 +35,7 @@ export class UserService {
       }
 
       async findOneByName(name: string): Promise<UserEntity | undefined> {
-        return this.buserRepository.findOneBy({ name });
+        return this.buserRepository.findOne({ where: { name } });
       }
 
     async addProfilePicture(id: string, file: Express.Multer.File): Promise<any> {
@@ -93,18 +97,24 @@ export class UserService {
         await this.buserRepository.remove(user);
     }
 
-    async getUserByName(name: string): Promise<void> {
+    async getUserByName(name: string): Promise<string> {
         const user = await this.buserRepository.findOne({ where: { name } });
     
         if (!user) {
-            throw new NotFoundException('User not found');
+          throw new NotFoundException('User not found');
         }
     
-        await this.buserRepository.findOneBy(user);
-    }
+        return `Welcome ${user.name}`;
+      }
 
-    async findUserById(userId: number): Promise<UserEntity> {
-        return this.buserRepository.findOne({ where: { id: userId } });
+      async getUserDetailsByEmail(email: string): Promise<{ name: string }> {
+        const user = await this.buserRepository.findOne({ where: { email } });
+    
+        if (!user) {
+          throw new NotFoundException('User not found');
+        }
+    
+        return { name: user.name };
       }
     
 }
