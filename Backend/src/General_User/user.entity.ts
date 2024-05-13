@@ -30,6 +30,9 @@ export class UserEntity {
     @Column({ default: 'General User' }) 
     role: string;
 
-    @OneToMany(() => MessageEntity, message => message.user)
-    messages: MessageEntity[];
+    @OneToMany(() => MessageEntity, message => message.sender)
+    sentMessages: MessageEntity[];
+
+    @OneToMany(() => MessageEntity, message => message.recipient)
+    receivedMessages: MessageEntity[];
 }
