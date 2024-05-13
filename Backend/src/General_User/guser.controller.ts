@@ -8,10 +8,8 @@ import { UpdateUseremailDto } from './updateuser.dto';
 import { UpdateUserfnameDto } from './updateuser.dto';
 import { UpdateUsernameDto } from './updateuser.dto';
 import { JwtAuthGuard } from '../auth/jwt.auth-guard';
-import { UserEntity } from './user.entity';
-import { AuthGuard } from '@nestjs/passport';
-import { UserModule } from './guser.module';
-import { Request } from '@nestjs/common';
+
+
 
 
 
@@ -68,19 +66,17 @@ export class UserController {
         return { message: 'User updated successfully' };
     }
 
-    @UseGuards(JwtAuthGuard)
+    
     @Delete(':name')
 async removeUserByName(@Param('name') name: string) {
     await this.buserService.removeUserByName(name);
     return { message: 'User removed successfully' };
 }
 
-@Get('info')
-  @UseGuards(JwtAuthGuard) // Protect this route with JWT authentication
-  getUserInfo(@Request() req) {
-    // Assuming user information is stored in the request object after authentication
-    const user = req.user;
-    return { user };
+@Get(':name')
+@UseGuards(JwtAuthGuard)
+  async getUserByName(@Param('name') name: string): Promise<string> {
+    return this.buserService.getUserByName(name);
   }
 
 
