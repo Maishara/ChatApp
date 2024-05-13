@@ -12,12 +12,19 @@ export class AppGateway {
 
   @WebSocketServer() server: Server; // Decorator to inject WebSocket server instance
 
+  async handleConnection(client: Socket) {
+    // Handle client connection
+  }
+
+  async handleDisconnect(client: Socket) {
+    // Handle client disconnection
+  }
+
   @SubscribeMessage('sendMessage')
   async handleSendMessage(client: Socket, payload: Payload): Promise<void> {
     try {
       const user = await this.userService.findOneByName(payload.name);
       if (user) {
-        // Emit message to all connected clients
         this.server.emit('recMessage', { user, message: payload.message });
       } else {
         // Handle user not found
