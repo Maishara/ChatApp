@@ -1,4 +1,5 @@
 export class MessageDto {
-    content: string;
-    email: string; // User email of the sender
-  }
+  senderId: number;
+  content: string;
+  recipientUsername: string; // Add recipientUsername field
+}
